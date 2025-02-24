@@ -1,82 +1,120 @@
-* {
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-body {
-    background-color: #121212;
-    color: white;
-    text-align: center;
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
     padding: 20px;
 }
 
+/* Header */
 header {
-    margin-bottom: 20px;
-}
-
-.task-input {
     display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
 }
 
-.task-input input, .task-input select, .task-input button {
-    padding: 10px;
-    border-radius: 5px;
+h1 {
+    font-size: 24px;
+}
+
+/* Buttons */
+button {
+    padding: 10px 15px;
     border: none;
-}
-
-.task-input input {
-    width: 200px;
-}
-
-.task-input select {
-    width: 150px;
-}
-
-.task-input button {
-    background-color: #4caf50;
+    border-radius: 8px;
+    background-color: #555;
     color: white;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.task-container {
+button:hover {
+    background-color: #777;
+}
+
+/* Description */
+.description {
+    text-align: center;
+    font-size: 18px;
+    margin: 20px 0;
+}
+
+/* Task Input */
+.task-section {
     display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
     justify-content: center;
+}
+
+input, select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Task Groups */
+.tasks-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
     gap: 20px;
 }
 
-.task-group {
-    background-color: #1e1e1e;
+.group {
+    background: #fff;
     padding: 15px;
-    border-radius: 8px;
-    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    min-width: 280px;
+}
+
+.task-list {
+    margin-top: 10px;
 }
 
 .task-card {
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px 0;
     display: flex;
     justify-content: space-between;
-    background-color: #333;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 5px;
+    align-items: center;
 }
 
-.task-card button {
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
+.task-card.diaria {
+    background-color: #4caf50;
+    color: white;
 }
 
-.task-card.diaria { background-color: #4caf50; }
-.task-card.as-vezes { background-color: #ffcc00; color: black; }
-.task-card.semanal { background-color: #ccc; color: black; }
+.task-card.as-vezes {
+    background-color: #ffcc00;
+}
 
-.complete {
-    opacity: 0.5;
-    text-decoration: line-through;
+.task-card.semanal {
+    background-color: #ccc;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode .group {
+    background: #333;
+    color: white;
 }
