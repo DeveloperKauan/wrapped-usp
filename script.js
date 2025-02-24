@@ -1,66 +1,96 @@
-document.addEventListener("DOMContentLoaded", loadTasks);
+// scripts.js
 
-const tasks = JSON.parse(localStorage.getItem("tasks")) || [
-    { id: 1, description: "Bandecar", group: "pessoal", routine: "diaria", completed: false },
-    { id: 2, description: "Biblioteca", group: "estudos", routine: "as-vezes", completed: false },
-    { id: 3, description: "Toquei em algum projeto pessoal que não terminei", group: "trabalho", routine: "semanal", completed: false }
-];
+document.addEventListener("DOMContentLoaded", () => {
+    const taskInput = document.getElementById("task-input");
+    const addTaskBtn = document.getElementById("add-task-btn");
+    const taskGroups = document.getElementById("task-groups");
+    const statistics = document.getElementById("statistics");
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [
+        { description: "Bandecar", group: "Pessoal", routine: "Diariamente", count: 0 },
+        { description: "Biblioteca", group: "Estudos", routine: "As vezes", count: 0 },
+        { description: "Toquei em algum projeto pessoal que não terminei", group: "Trabalho", routine: "Semanalmente", count: 0 }
+    ];
 
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function loadTasks() {
-    document.querySelectorAll(".task-list").forEach(el => el.innerHTML = "");
-    tasks.forEach(renderTask);
-    updateStats();
-}
-
-function addTask() {
-    const description = document.getElementById("task-desc").value;
-    const group = document.getElementById("task-group").value;
-    const routine = document.getElementById("task-routine").value;
-
-    if (!description.trim()) return;
-
-    const newTask = {
-        id: Date.now(),
-        description,
-        group,
-        routine,
-        completed: false
-    };
-
-    tasks.push(newTask);
-    renderTask(newTask);
-    saveTasks();
-    document.getElementById("task-desc").value = "";
-}
-
-function renderTask(task) {
-    const taskList = document.getElementById(task.group).querySelector(".task-list");
-    const taskElement = document.createElement("div");
-    taskElement.classList.add("task-card", task.routine);
-    if (task.completed) taskElement.classList.add("complete");
-
-    taskElement.innerHTML = `
-        <p>${task.description}</p>
-        <button onclick="toggleCompletion(${task.id})">✔</button>
-    `;
-
-    taskList.appendChild(taskElement);
-}
-
-function toggleCompletion(taskId) {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-        task.completed = !task.completed;
-        saveTasks();
-        loadTasks();
+    function saveTasks() {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
     }
-}
 
-function updateStats() {
-    const completedCount = tasks.filter(t => t.completed).length;
-    document.getElementById("completed-count").textContent = completedCount;
-}
+    function renderTasks() {
+        taskGroups.innerHTML = "";
+        const groupedTasks = {};
+
+        tasks.forEach(task => {
+            if (!groupedTasks[task.group]) {
+                groupedTasks[task.group] = [];
+            }
+            groupedTasks[task.group].push(task);
+        });
+
+        Object.keys(groupedTasks).forEach(group => {
+            const groupElement = document.createElement("div");
+            groupElement.classList.add("task-group");
+            groupElement.innerHTML = `<h3>${group}</h3>`;
+
+            groupedTasks[group].forEach((task, index) => {
+                const taskElement = document.createElement("div");
+                taskElement.classList.add("task");
+                taskElement.innerHTML = `
+                    <div class="task-left" style="border-left: 5px solid ${getRoutineColor(task.routine)}">
+                        <span>${task.description}</span>
+                        <button class="complete-btn" data-index="${index}">Concluir (${task.count})</button>
+                        <button class="delete-btn" data-index="${index}">🗑</button>
+                    </div>
+                `;
+                groupElement.appendChild(taskElement);
+            });
+
+            taskGroups.appendChild(groupElement);
+        });
+
+        updateStatistics();
+    }
+
+    function getRoutineColor(routine) {
+        switch (routine) {
+            case "Diariamente": return "green";
+            case "As vezes": return "yellow";
+            case "Semanalmente": return "gray";
+            default: return "black";
+        }
+    }
+
+    function updateStatistics() {
+        statistics.innerHTML = "<h3>Retrospectiva Universitária</h3>";
+        tasks.forEach(task => {
+            statistics.innerHTML += `<p>${task.description}: ${task.count} vezes</p>`;
+        });
+    }
+
+    addTaskBtn.addEventListener("click", () => {
+        const description = taskInput.value.trim();
+        const group = document.getElementById("group-select").value;
+        const routine = document.getElementById("routine-select").value;
+        if (description) {
+            tasks.push({ description, group, routine, count: 0 });
+            saveTasks();
+            renderTasks();
+            taskInput.value = "";
+        }
+    });
+
+    taskGroups.addEventListener("click", (e) => {
+        if (e.target.classList.contains("complete-btn")) {
+            const index = e.target.getAttribute("data-index");
+            tasks[index].count += 1;
+            saveTasks();
+            renderTasks();
+        } else if (e.target.classList.contains("delete-btn")) {
+            const index = e.target.getAttribute("data-index");
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        }
+    });
+
+    renderTasks();
+});
