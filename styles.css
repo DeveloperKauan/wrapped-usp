@@ -1,0 +1,119 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    color: white;
+    padding: 10px 20px;
+}
+
+header h1 {
+    font-size: 24px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Task Section */
+.task-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#tasks-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.task-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 300px;
+    position: relative;
+}
+
+.task-card.complete {
+    background-color: #d3ffd3;
+}
+
+.task-card .priority {
+    background-color: #ffcc00;
+    padding: 5px;
+    border-radius: 5px;
+    color: white;
+}
+
+.task-card .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+footer {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode header {
+    background-color: #444;
+}
+
+body.dark-mode button {
+    background-color: #444;
+}
+
+body.dark-mode .task-card {
+    background-color: #333;
+    color: white;
+}
+
+body.dark-mode .task-card.complete {
+    background-color: #4caf50;
+}
