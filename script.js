@@ -6,11 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tasksContainer = document.getElementById("tasks-container");
     const toggleThemeButton = document.getElementById("toggle-theme");
 
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [
-        { id: 1, description: "Bandecar", group: "Pessoal", routine: "diaria", completed: 0 },
-        { id: 2, description: "Biblioteca", group: "Estudos", routine: "asvezes", completed: 0 },
-        { id: 3, description: "Toquei em algum projeto pessoal que não terminei", group: "Trabalho", routine: "semanal", completed: 0 }
-    ];
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
     let darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
     document.body.classList.toggle("dark-mode", darkMode);
@@ -22,12 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTasks() {
         tasksContainer.innerHTML = "";
 
-        tasks.forEach(task => {
+        tasks.forEach((task, index) => {
             const taskCard = document.createElement("div");
             taskCard.classList.add("task-card");
-
-            const routineIndicator = document.createElement("div");
-            routineIndicator.classList.add("routine-indicator", `routine-${task.routine}`);
 
             const taskInfo = document.createElement("div");
             taskInfo.classList.add("task-info");
@@ -36,17 +29,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>Feita ${task.completed} vezes</p>
             `;
 
+            const taskButtons = document.createElement("div");
+            taskButtons.classList.add("task-buttons");
+
             const completeButton = document.createElement("button");
-            completeButton.textContent = "Concluir";
+            completeButton.textContent = "+1";
             completeButton.addEventListener("click", () => {
                 task.completed++;
                 saveTasks();
                 renderTasks();
             });
 
-            taskCard.appendChild(routineIndicator);
+            const decreaseButton = document.createElement("button");
+            decreaseButton.textContent = "-1";
+            decreaseButton.addEventListener("click", () => {
+                if (task.completed > 0) task.completed--;
+                saveTasks();
+                renderTasks();
+            });
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "🗑";
+            deleteButton.addEventListener("click", () => {
+                tasks.splice(index, 1);
+                saveTasks();
+                renderTasks();
+            });
+
+            taskButtons.appendChild(completeButton);
+            taskButtons.appendChild(decreaseButton);
+            taskButtons.appendChild(deleteButton);
+
             taskCard.appendChild(taskInfo);
-            taskCard.appendChild(completeButton);
+            taskCard.appendChild(taskButtons);
             tasksContainer.appendChild(taskCard);
         });
     }
