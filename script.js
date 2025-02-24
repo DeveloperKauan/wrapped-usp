@@ -1,114 +1,66 @@
-// Variables
-const taskInput = document.getElementById("task-input");
-const prioritySelect = document.getElementById("priority-select");
-const groupSelect = document.getElementById("group-select");
-const addTaskButton = document.getElementById("add-task");
-const tasksContainer = document.getElementById("tasks-container");
-const shareButton = document.getElementById("share-tasks");
-const shareLinkInput = document.getElementById("share-input");
-const copyLinkButton = document.getElementById("copy-link");
-const toggleThemeButton = document.getElementById("toggle-theme");
+document.addEventListener("DOMContentLoaded", loadTasks);
 
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
+const tasks = JSON.parse(localStorage.getItem("tasks")) || [
+    { id: 1, description: "Bandecar", group: "pessoal", routine: "diaria", completed: false },
+    { id: 2, description: "Biblioteca", group: "estudos", routine: "as-vezes", completed: false },
+    { id: 3, description: "Toquei em algum projeto pessoal que não terminei", group: "trabalho", routine: "semanal", completed: false }
+];
 
-// Initialize the UI
-document.body.classList.toggle("dark-mode", darkMode);
-renderTasks();
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-// Event listeners
-addTaskButton.addEventListener("click", addTask);
-taskInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        addTask();
-    }
-});
-shareButton.addEventListener("click", generateShareLink);
-copyLinkButton.addEventListener("click", copyShareLink);
-toggleThemeButton.addEventListener("click", toggleTheme);
+function loadTasks() {
+    document.querySelectorAll(".task-list").forEach(el => el.innerHTML = "");
+    tasks.forEach(renderTask);
+    updateStats();
+}
 
-// Functions
 function addTask() {
-    const taskDescription = taskInput.value.trim();
-    const priority = prioritySelect.value;
-    const group = groupSelect.value;
+    const description = document.getElementById("task-desc").value;
+    const group = document.getElementById("task-group").value;
+    const routine = document.getElementById("task-routine").value;
 
-    if (taskDescription === "") return;
+    if (!description.trim()) return;
 
     const newTask = {
         id: Date.now(),
-        description: taskDescription,
-        priority: priority,
-        group: group,
-        completed: false,
-        count: 0,
+        description,
+        group,
+        routine,
+        completed: false
     };
 
     tasks.push(newTask);
-    taskInput.value = ""; // Clear input field
+    renderTask(newTask);
     saveTasks();
-    renderTasks();
+    document.getElementById("task-desc").value = "";
 }
 
-function renderTasks() {
-    tasksContainer.innerHTML = "";
+function renderTask(task) {
+    const taskList = document.getElementById(task.group).querySelector(".task-list");
+    const taskElement = document.createElement("div");
+    taskElement.classList.add("task-card", task.routine);
+    if (task.completed) taskElement.classList.add("complete");
 
-    tasks.sort((a, b) => {
-        const priorityOrder = { baixa: 1, media: 2, alta: 3 };
-        return priorityOrder[b.priority] - priorityOrder[a.priority];
-    });
+    taskElement.innerHTML = `
+        <p>${task.description}</p>
+        <button onclick="toggleCompletion(${task.id})">✔</button>
+    `;
 
-    tasks.forEach(task => {
-        const taskCard = document.createElement("div");
-        taskCard.classList.add("task-card");
-        if (task.completed) taskCard.classList.add("complete");
-
-        taskCard.innerHTML = `
-            <span class="priority">${task.priority}</span>
-            <p>${task.description}</p>
-            <button class="delete-btn" onclick="deleteTask(${task.id})">X</button>
-            <button onclick="toggleCompletion(${task.id})">Mark as ${task.completed ? "Incomplete" : "Complete"}</button>
-            <p>Completed: ${task.count} times</p>
-        `;
-
-        tasksContainer.appendChild(taskCard);
-    });
+    taskList.appendChild(taskElement);
 }
 
 function toggleCompletion(taskId) {
     const task = tasks.find(t => t.id === taskId);
     if (task) {
         task.completed = !task.completed;
-        if (task.completed) task.count++;
         saveTasks();
-        renderTasks();
+        loadTasks();
     }
 }
 
-function deleteTask(taskId) {
-    tasks = tasks.filter(t => t.id !== taskId);
-    saveTasks();
-    renderTasks();
-}
-
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function generateShareLink() {
-    const link = `${window.location.origin}?tasks=${encodeURIComponent(JSON.stringify(tasks))}`;
-    shareLinkInput.value = link;
-    document.getElementById("share-link").classList.remove("hidden");
-}
-
-function copyShareLink() {
-    shareLinkInput.select();
-    document.execCommand("copy");
-}
-
-function toggleTheme() {
-    darkMode = !darkMode;
-    document.body.classList.toggle("dark-mode", darkMode);
-    localStorage.setItem("darkMode", darkMode);
-    saveTasks();
+function updateStats() {
+    const completedCount = tasks.filter(t => t.completed).length;
+    document.getElementById("completed-count").textContent = completedCount;
 }
