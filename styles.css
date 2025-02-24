@@ -99,6 +99,14 @@ input, select, button {
     margin-left: 10px;
 }
 
+.hidden {
+    display: none;
+}
+.task-buttons {
+    display: flex;
+    gap: 5px;
+}
+
 .task-card.complete {
     background-color: #d3ffd3;
     text-decoration: line-through;
