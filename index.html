@@ -7,26 +7,38 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>USP Wrapped</h1>
-        <p>A sua retrospectiva da universidade</p>
-        <button id="toggleTheme">Alternar Tema</button>
-    </header>
+    <div class="app-container">
+        <header>
+            <h1>USP Wrapped</h1>
+            <p>Gerencie suas tarefas e visualize sua produtividade</p>
+            <button id="toggle-theme">Alternar Tema</button>
+        </header>
+        <main>
+            <section class="task-section">
+                <input type="text" id="task-input" placeholder="Digite sua tarefa...">
+                <select id="routine-select">
+                    <option value="diaria">Diária</option>
+                    <option value="as_vezes">Às vezes</option>
+                    <option value="semanalmente">Semanalmente</option>
+                </select>
+                <select id="group-select">
+                    <option value="Pessoal">Pessoal</option>
+                    <option value="Estudos">Estudos</option>
+                    <option value="Trabalho">Trabalho</option>
+                </select>
+                <button id="add-task">Adicionar Tarefa</button>
+            </section>
 
-    <main>
-        <div id="task-container">
-            <h2>Suas Tarefas</h2>
-            <input type="text" id="new-task" placeholder="Adicione uma nova tarefa...">
-            <button id="add-task">Adicionar</button>
-            <div id="groups"></div>
-        </div>
-
-        <div id="stats">
-            <h2>Estatísticas</h2>
-            <ul id="stats-list"></ul>
-        </div>
-    </main>
-
-    <script src="scripts.js"></script>
+            <section class="tasks-container" id="tasks-container"></section>
+        </main>
+        <footer>
+            <button id="share-tasks">Compartilhar Tarefas</button>
+            <div id="share-link" class="hidden">
+                <input type="text" id="share-input" readonly>
+                <button id="copy-link">Copiar Link</button>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
