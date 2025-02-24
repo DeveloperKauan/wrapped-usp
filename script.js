@@ -1,89 +1,80 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const taskInput = document.getElementById("new-task");
+    const taskInput = document.getElementById("task-input");
+    const routineSelect = document.getElementById("routine-select");
+    const groupSelect = document.getElementById("group-select");
     const addTaskButton = document.getElementById("add-task");
-    const groupsContainer = document.getElementById("groups");
-    const statsList = document.getElementById("stats-list");
-    const themeToggle = document.getElementById("toggleTheme");
-    
+    const tasksContainer = document.getElementById("tasks-container");
+    const toggleThemeButton = document.getElementById("toggle-theme");
+
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [
-        { name: "Bandecar", group: "Pessoal", routine: "diaria", count: 0 },
-        { name: "Biblioteca", group: "Estudos", routine: "vezes", count: 0 },
-        { name: "Toquei em algum projeto pessoal que não terminei", group: "Trabalho", routine: "semanal", count: 0 }
+        { id: 1, description: "Bandecar", group: "Pessoal", routine: "diaria", completed: 0 },
+        { id: 2, description: "Biblioteca", group: "Estudos", routine: "asvezes", completed: 0 },
+        { id: 3, description: "Toquei em algum projeto pessoal que não terminei", group: "Trabalho", routine: "semanal", completed: 0 }
     ];
-    
-    let theme = localStorage.getItem("theme") || "light";
-    document.body.classList.toggle("dark-mode", theme === "dark");
+
+    let darkMode = JSON.parse(localStorage.getItem("darkMode")) || false;
+    document.body.classList.toggle("dark-mode", darkMode);
 
     function saveTasks() {
         localStorage.setItem("tasks", JSON.stringify(tasks));
-        renderTasks();
     }
 
     function renderTasks() {
-        groupsContainer.innerHTML = "";
-        statsList.innerHTML = "";
+        tasksContainer.innerHTML = "";
 
-        let groupedTasks = {};
         tasks.forEach(task => {
-            if (!groupedTasks[task.group]) groupedTasks[task.group] = [];
-            groupedTasks[task.group].push(task);
-        });
+            const taskCard = document.createElement("div");
+            taskCard.classList.add("task-card");
 
-        Object.keys(groupedTasks).forEach(group => {
-            const groupDiv = document.createElement("div");
-            groupDiv.classList.add("group");
-            groupDiv.innerHTML = `<h3>${group}</h3>`;
+            const routineIndicator = document.createElement("div");
+            routineIndicator.classList.add("routine-indicator", `routine-${task.routine}`);
 
-            groupedTasks[group].forEach((task, index) => {
-                const taskDiv = document.createElement("div");
-                taskDiv.classList.add("task", task.routine);
-                taskDiv.innerHTML = `
-                    <span>${task.name}</span>
-                    <button onclick="markTask(${index})">✔</button>
-                    <button onclick="deleteTask(${index})">🗑</button>
-                `;
-                groupDiv.appendChild(taskDiv);
+            const taskInfo = document.createElement("div");
+            taskInfo.classList.add("task-info");
+            taskInfo.innerHTML = `
+                <strong>${task.group}</strong>: ${task.description}
+                <p>Feita ${task.completed} vezes</p>
+            `;
+
+            const completeButton = document.createElement("button");
+            completeButton.textContent = "Concluir";
+            completeButton.addEventListener("click", () => {
+                task.completed++;
+                saveTasks();
+                renderTasks();
             });
 
-            groupsContainer.appendChild(groupDiv);
-        });
-
-        tasks.forEach(task => {
-            const statItem = document.createElement("li");
-            statItem.textContent = `${task.name}: ${task.count} vezes`;
-            statsList.appendChild(statItem);
+            taskCard.appendChild(routineIndicator);
+            taskCard.appendChild(taskInfo);
+            taskCard.appendChild(completeButton);
+            tasksContainer.appendChild(taskCard);
         });
     }
 
-    window.markTask = function(index) {
-        tasks[index].count++;
-        saveTasks();
-    };
-
-    window.deleteTask = function(index) {
-        tasks.splice(index, 1);
-        saveTasks();
-    };
-
     addTaskButton.addEventListener("click", () => {
-        const taskName = taskInput.value.trim();
-        if (taskName) {
-            tasks.push({ name: taskName, group: "Outros", routine: "semanal", count: 0 });
-            taskInput.value = "";
-            saveTasks();
-        }
+        const description = taskInput.value.trim();
+        const routine = routineSelect.value;
+        const group = groupSelect.value;
+
+        if (description === "") return;
+
+        tasks.push({
+            id: Date.now(),
+            description,
+            group,
+            routine,
+            completed: 0
+        });
+
+        taskInput.value = "";
+        saveTasks();
+        renderTasks();
     });
 
-    taskInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            addTaskButton.click();
-        }
-    });
-
-    themeToggle.addEventListener("click", () => {
-        document.body.classList.toggle("dark-mode");
-        theme = document.body.classList.contains("dark-mode") ? "dark" : "light";
-        localStorage.setItem("theme", theme);
+    toggleThemeButton.addEventListener("click", () => {
+        darkMode = !darkMode;
+        document.body.classList.toggle("dark-mode", darkMode);
+        localStorage.setItem("darkMode", darkMode);
     });
 
     renderTasks();
