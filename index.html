@@ -1,55 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retrospectiva Universitária</title>
+    <title>USP Wrapped</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>A sua retrospectiva na universidade!</h1>
+        <h1>USP Wrapped</h1>
+        <p>A sua retrospectiva da universidade</p>
+        <button id="toggleTheme">Alternar Tema</button>
     </header>
 
     <main>
-        <section id="task-section">
-            <div class="task-input">
-                <input type="text" id="task-desc" placeholder="Digite sua tarefa...">
-                <select id="task-group">
-                    <option value="pessoal">Pessoal</option>
-                    <option value="estudos">Estudos</option>
-                    <option value="trabalho">Trabalho</option>
-                </select>
-                <select id="task-routine">
-                    <option value="diaria">Diariamente</option>
-                    <option value="as-vezes">Às vezes</option>
-                    <option value="semanal">Semanalmente</option>
-                </select>
-                <button onclick="addTask()">Adicionar</button>
-            </div>
+        <div id="task-container">
+            <h2>Suas Tarefas</h2>
+            <input type="text" id="new-task" placeholder="Adicione uma nova tarefa...">
+            <button id="add-task">Adicionar</button>
+            <div id="groups"></div>
+        </div>
 
-            <div class="task-container">
-                <div class="task-group" id="pessoal">
-                    <h2>Pessoal</h2>
-                    <div class="task-list"></div>
-                </div>
-                <div class="task-group" id="estudos">
-                    <h2>Estudos</h2>
-                    <div class="task-list"></div>
-                </div>
-                <div class="task-group" id="trabalho">
-                    <h2>Trabalho</h2>
-                    <div class="task-list"></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="stats">
-            <h2>Progresso</h2>
-            <p><span id="completed-count">0</span> tarefas concluídas</p>
-        </section>
+        <div id="stats">
+            <h2>Estatísticas</h2>
+            <ul id="stats-list"></ul>
+        </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
