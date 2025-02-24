@@ -1,72 +1,128 @@
-:root {
-    --background-light: #f0f0f0;
-    --background-dark: #1e1e1e;
-    --text-light: #000;
-    --text-dark: #fff;
-    --primary-color: #333;
-    --green: #4CAF50;
-    --yellow: #FFC107;
-    --gray: #9E9E9E;
-}
-
+/* General styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--background-light);
-    color: var(--text-light);
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: all 0.3s;
+    background-color: #f4f4f4;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.dark-mode {
-    background-color: var(--background-dark);
-    color: var(--text-dark);
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 header {
     text-align: center;
+    background-color: #222;
+    color: white;
     padding: 20px;
+    border-radius: 10px;
 }
 
-#task-container, #stats {
-    width: 80%;
-    max-width: 600px;
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+.task-section {
+    display: flex;
+    gap: 10px;
     margin: 20px 0;
 }
 
-.task {
+input, select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.tasks-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.task-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: white;
-    padding: 10px;
-    border-left: 5px solid;
-    margin-bottom: 5px;
-    transition: background 0.3s;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-width: 280px;
 }
 
-.task.diaria { border-left-color: var(--green); }
-.task.vezes { border-left-color: var(--yellow); }
-.task.semanal { border-left-color: var(--gray); }
-
-button {
-    cursor: pointer;
-    padding: 5px 10px;
-    border: none;
-    margin: 5px;
-    transition: background 0.3s;
+.task-card .routine-indicator {
+    width: 5px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 5px 0 0 5px;
 }
 
-.dark-mode button {
-    background: var(--primary-color);
-    color: var(--text-dark);
+.routine-diaria { background-color: green; }
+.routine-asvezes { background-color: yellow; }
+.routine-semanal { background-color: gray; }
+
+.task-card .task-info {
+    flex-grow: 1;
+    margin-left: 10px;
 }
 
-@media (max-width: 600px) {
-    #task-container, #stats {
-        width: 95%;
-    }
+.task-card.complete {
+    background-color: #d3ffd3;
+    text-decoration: line-through;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode header {
+    background-color: #444;
+}
+
+body.dark-mode button {
+    background-color: #555;
+}
+
+body.dark-mode .task-card {
+    background-color: #333;
+    color: white;
+}
+
+body.dark-mode .task-card.complete {
+    background-color: #4caf50;
 }
